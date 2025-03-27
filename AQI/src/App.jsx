@@ -1,84 +1,63 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Header from "./Components/Header";
+import Filters from "./Components/Filters";
+import AQIDisplay from "./Components/AQIDisplay";
 
-const AQIDashboard = () => {
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("karnataka");
+function App() {
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]); // This will store the cities
   const [aqiData, setAqiData] = useState(null);
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [lastUpdated, setLastUpdated] = useState("");
 
+  // Fetch states data when the component mounts
   useEffect(() => {
-    // Fetch the list of cities dynamically
     axios
       .get(
-        "https://www.data.gov.in/resource/real-time-air-quality-index-various-locations"
-      ) // Replace with actual API
+        "https://api.data.gov.in/resource/real-time-air-quality-index-various-locations"
+      )
       .then((response) => {
-        setCities(response.data);
-        if (response.data.length > 0) {
-          setSelectedCity(response.data[karnataka]); // Set default city
-        }
+        // Assuming the API provides a list of states (this can be updated based on actual API response)
+        const uniqueStates = [
+          ...new Set(response.data.records.map((record) => record.state)),
+        ];
+        setStates(uniqueStates);
       })
-      .catch((error) => console.error("Error fetching cities:", error));
+      .catch((error) => console.error("Error fetching states:", error));
   }, []);
 
+  // Fetch cities and AQI data based on selected state and city
   useEffect(() => {
-    if (selectedCity) {
-      // Fetch AQI data for selected city
+    if (selectedState && selectedCity) {
       axios
         .get(
-          `https://www.data.gov.in/resource/real-time-air-quality-index-various-locations=${selectedCity}`
-        ) // Replace with actual API
+          `https://api.data.gov.in/resource/real-time-air-quality-index-various-locations?state=${selectedState}&city=${selectedCity}`
+        )
         .then((response) => {
-          setAqiData(response.data);
+          setAqiData(response.data.records);
           setLastUpdated(new Date().toLocaleString());
         })
         .catch((error) => console.error("Error fetching AQI data:", error));
     }
-  }, [selectedCity]);
+  }, [selectedState, selectedCity]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* Header */}
-      <header className="bg-blue-600 text-white p-4 rounded-lg shadow-md flex justify-between items-center">
-        <h1 className="text-2xl font-bold">
-          Air Quality Index (AQI) Dashboard
-        </h1>
-        <p className="text-sm">Last Updated: {lastUpdated}</p>
-      </header>
-
-      {/* Filter Section */}
-      <div className="mt-6 flex flex-col md:flex-row justify-between items-center">
-        <label className="text-lg font-semibold">Select City:</label>
-        <select
-          className="border p-2 rounded-md shadow-sm bg-white"
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-        >
-          {cities.map((city) => (
-            <option key={city} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
+    <div className="min-h-screen bg-gray-100">
+      <Header lastUpdated={lastUpdated} />
+      <div className="container mx-auto p-4">
+        <Filters
+          states={states}
+          cities={cities} // Pass cities state to Filters component
+          setSelectedState={setSelectedState}
+          setSelectedCity={setSelectedCity}
+          setCities={setCities} // Pass setCities function to Filters component
+        />
+        <AQIDisplay aqiData={aqiData} />
       </div>
-
-      {/* AQI Data Section */}
-      {aqiData && (
-        <div className="mt-6 bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold">
-            {aqiData.city} AQI: {aqiData.aqi}
-          </h2>
-          <p className="mt-2">Air Quality: {aqiData.quality}</p>
-          <img
-            src={aqiData.image} // API should return an image URL based on AQI
-            alt="AQI Level"
-            className="mt-4 w-full max-w-md mx-auto"
-          />
-        </div>
-      )}
     </div>
   );
-};
+}
 
-export default AQIDashboard;
+export default App;
