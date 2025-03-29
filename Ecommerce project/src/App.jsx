@@ -7,6 +7,7 @@ import Womens from "./Pages/Womens";
 import Kids from "./Pages/Kids";
 import Login from "./Pages/Login";
 import Cart from "./Pages/Cart";
+import Footer from "./Components/Footer";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
       <>
         <Navbar />
         <Home />
+        <Footer />
       </>
     ),
   },
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
       <>
         <Navbar />
         <Mens />
+        <Footer />
       </>
     ),
   },
@@ -32,6 +35,7 @@ const router = createBrowserRouter([
       <>
         <Navbar />
         <Womens />
+        <Footer />
       </>
     ),
   },
@@ -41,6 +45,7 @@ const router = createBrowserRouter([
       <>
         <Navbar />
         <Kids />
+        <Footer />
       </>
     ),
   },
@@ -50,6 +55,7 @@ const router = createBrowserRouter([
       <>
         <Navbar />
         <Login />
+        <Footer />
       </>
     ),
   },
@@ -59,6 +65,7 @@ const router = createBrowserRouter([
       <>
         <Navbar />
         <Cart />
+        <Footer />
       </>
     ),
   },
