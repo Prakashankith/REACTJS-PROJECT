@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import Breadcrum from "./BreadCrum";
 import ProductDisplay from "./ProductDisplay";
 import DescriptionBox from "./DescriptionBox";
-import NewCollection from "./NewCollection";
 
 const SingleProduct = () => {
   const { all_product } = useContext(Shopcontext);

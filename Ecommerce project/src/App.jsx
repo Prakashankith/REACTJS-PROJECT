@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Components/Navbar/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import Mens from "./Pages/Mens";
@@ -9,6 +9,7 @@ import Login from "./Pages/Login";
 import Cart from "./Pages/Cart";
 import Footer from "./Components/Footer";
 import SingleProduct from "./Components/SingleProduct";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -81,6 +82,7 @@ const router = createBrowserRouter([
     ),
   },
 ]);
+
 const App = () => {
   return (
     <>
